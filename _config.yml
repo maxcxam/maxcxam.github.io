@@ -4,3 +4,4 @@ plugins:
 
 title: 'Maxcxam test'
 description: '[A short description of your site's purpose]'
+theme: jekyll-theme-hacker
