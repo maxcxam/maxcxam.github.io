@@ -1,19 +1,1047 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jekyll Serial Programmer | Blog</title>
+  <meta charset="UTF-8" />
+  <title>NEONCORE TECH — Futuristic IT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #050712;
+      --bg-alt: #070a18;
+      --primary: #4df2ff;
+      --accent: #ff4df2;
+      --text: #f5f7ff;
+      --muted: #8b90b5;
+      --border-glow: 0 0 25px rgba(77, 242, 255, 0.6);
+      --accent-glow: 0 0 25px rgba(255, 77, 242, 0.6);
+      --radius: 18px;
+    }
 
-    <link rel="stylesheet" href="/jekyll-theme-serial-programmer/assets/css/blog.css">
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    <link rel="stylesheet" href="/jekyll-theme-serial-programmer/assets/css/common.css">
-    <script src="/jekyll-theme-serial-programmer/assets/js/categories.js"></script>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #151a3a 0, #050712 55%);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
+    /* ---------- GLOBAL LAYOUT ---------- */
+
+    .noise {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      opacity: 0.08;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+      z-index: 1;
+    }
+
+    main {
+      position: relative;
+      z-index: 2;
+    }
+
+    .container {
+      width: min(1120px, 100% - 32px);
+      margin: 0 auto;
+    }
+
+    /* ---------- NAVBAR ---------- */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(
+        to bottom,
+        rgba(5, 7, 18, 0.9),
+        rgba(5, 7, 18, 0.4),
+        transparent
+      );
+      border-bottom: 1px solid rgba(77, 242, 255, 0.15);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: 0.18em;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .logo-mark {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #ffffff, #4df2ff 40%, #050712 70%);
+      box-shadow: var(--border-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo-mark::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border-radius: inherit;
+      border: 1px solid rgba(5, 7, 18, 0.9);
+      box-shadow: inset 0 0 18px rgba(5, 7, 18, 0.9);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      font-size: 14px;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 4px;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transition: width 0.2s ease;
+      border-radius: 999px;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 8px 18px;
+      border: 1px solid rgba(77, 242, 255, 0.4);
+      background: radial-gradient(circle at top left, rgba(77, 242, 255, 0.18), transparent);
+      color: var(--text);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+      box-shadow: 0 0 0 rgba(77, 242, 255, 0.0);
+    }
+
+    .btn span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--primary);
+      box-shadow: 0 0 10px rgba(77, 242, 255, 0.9);
+    }
+
+    .btn:hover {
+      background: radial-gradient(circle at top left, rgba(77, 242, 255, 0.32), transparent);
+      box-shadow: var(--border-glow);
+      transform: translateY(-1px);
+    }
+
+    /* ---------- HERO SECTION ---------- */
+
+    .hero {
+      padding: 72px 0 96px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.1fr);
+      gap: 48px;
+      align-items: center;
+    }
+
+    .hero-kicker {
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .hero-kicker::before {
+      content: "";
+      width: 32px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary));
+      opacity: 0.7;
+    }
+
+    .hero-title {
+      font-size: clamp(38px, 4vw, 52px);
+      line-height: 1.08;
+      letter-spacing: 0.02em;
+      margin-bottom: 18px;
+    }
+
+    .hero-title span.gradient {
+      background: linear-gradient(120deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 420px;
+      line-height: 1.6;
+      margin-bottom: 26px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 26px;
+    }
+
+    .btn-primary {
+      border: none;
+      background: linear-gradient(120deg, var(--primary), var(--accent));
+      color: #050712;
+      box-shadow: var(--accent-glow);
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 0 32px rgba(255, 77, 242, 0.9);
+      transform: translateY(-1px) scale(1.01);
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .hero-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-meta span::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: radial-gradient(circle, var(--primary), transparent);
+      box-shadow: 0 0 10px rgba(77, 242, 255, 0.9);
+    }
+
+    /* ---------- HERO 3D PANEL ---------- */
+
+    .hero-visual {
+      position: relative;
+      perspective: 1200px;
+    }
+
+    .orbital {
+      position: absolute;
+      inset: -80px -40px;
+      background: radial-gradient(circle at 20% 0, rgba(77, 242, 255, 0.25), transparent 55%),
+        radial-gradient(circle at 80% 100%, rgba(255, 77, 242, 0.25), transparent 55%);
+      opacity: 0.6;
+      filter: blur(18px);
+      z-index: -1;
+    }
+
+    .card-3d {
+      position: relative;
+      border-radius: 26px;
+      padding: 22px;
+      background: radial-gradient(circle at top, #151a3a 0, #050712 55%);
+      border: 1px solid rgba(77, 242, 255, 0.25);
+      box-shadow: 0 26px 60px rgba(0, 0, 0, 0.9), var(--border-glow);
+      transform-style: preserve-3d;
+      transform: rotateY(-18deg) rotateX(10deg);
+      transition: transform 0.4s ease-out, box-shadow 0.4s ease-out;
+      overflow: hidden;
+    }
+
+    .card-3d::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: conic-gradient(
+        from 120deg,
+        rgba(77, 242, 255, 0.0),
+        rgba(77, 242, 255, 0.35),
+        rgba(255, 77, 242, 0.0),
+        rgba(255, 77, 242, 0.35),
+        rgba(77, 242, 255, 0.0)
+      );
+      opacity: 0.35;
+      mix-blend-mode: screen;
+      animation: spin 18s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .chip {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(77, 242, 255, 0.4);
+      background: radial-gradient(circle at top left, rgba(77, 242, 255, 0.18), transparent);
+      color: var(--muted);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .status-pill span.dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #00ff9d;
+      box-shadow: 0 0 12px rgba(0, 255, 157, 0.9);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .grid-left {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .metric {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: linear-gradient(
+        135deg,
+        rgba(77, 242, 255, 0.08),
+        rgba(255, 77, 242, 0.05)
+      );
+      border: 1px solid rgba(77, 242, 255, 0.25);
+      box-shadow: 0 0 18px rgba(0, 0, 0, 0.7);
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 6px;
+    }
+
+    .metric-value {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .metric-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .grid-right {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .tag {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+      background: rgba(5, 7, 18, 0.7);
+    }
+
+    .radar {
+      margin-top: 6px;
+      height: 90px;
+      border-radius: 18px;
+      border: 1px solid rgba(77, 242, 255, 0.25);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(77, 242, 255, 0.25), transparent 60%),
+        repeating-radial-gradient(circle at 50% 50%, rgba(77, 242, 255, 0.2), rgba(77, 242, 255, 0.2) 1px, transparent 1px, transparent 6px),
+        radial-gradient(circle at 50% 50%, rgba(5, 7, 18, 0.9), #050712 70%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .radar-line {
+      position: absolute;
+      inset: 0;
+      background: conic-gradient(
+        from 0deg,
+        rgba(77, 242, 255, 0.0),
+        rgba(77, 242, 255, 0.6),
+        rgba(77, 242, 255, 0.0)
+      );
+      animation: sweep 4s linear infinite;
+      mix-blend-mode: screen;
+    }
+
+    @keyframes sweep {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .radar-dot {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #4df2ff;
+      box-shadow: 0 0 12px rgba(77, 242, 255, 0.9);
+      animation: blink 1.6s ease-in-out infinite alternate;
+    }
+
+    .radar-dot:nth-child(2) {
+      top: 22%;
+      left: 68%;
+    }
+
+    .radar-dot:nth-child(3) {
+      top: 62%;
+      left: 32%;
+      animation-delay: 0.4s;
+    }
+
+    .radar-dot:nth-child(4) {
+      top: 40%;
+      left: 50%;
+      animation-delay: 0.9s;
+    }
+
+    @keyframes blink {
+      from {
+        opacity: 0.2;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1.1);
+      }
+    }
+
+    /* ---------- SECTIONS ---------- */
+
+    section {
+      padding: 40px 0 72px;
+    }
+
+    .section-label {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 18px;
+      margin-bottom: 26px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      letter-spacing: 0.04em;
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 360px;
+      line-height: 1.6;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      border-radius: var(--radius);
+      padding: 16px 16px 18px;
+      background: linear-gradient(
+        145deg,
+        rgba(7, 10, 24, 0.95),
+        rgba(10, 14, 32, 0.98)
+      );
+      border: 1px solid rgba(77, 242, 255, 0.18);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at 0 0, rgba(77, 242, 255, 0.25), transparent 55%);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      mix-blend-mode: screen;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-kicker {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .card-body {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .card-meta {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(77, 242, 255, 0.35);
+      color: var(--primary);
+      background: rgba(5, 7, 18, 0.9);
+    }
+
+    /* ---------- CTA ---------- */
+
+    .cta {
+      margin-top: 32px;
+      border-radius: 22px;
+      padding: 22px 20px;
+      background: radial-gradient(circle at 0 0, rgba(77, 242, 255, 0.25), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(255, 77, 242, 0.25), transparent 55%),
+        linear-gradient(145deg, #050712, #070a18);
+      border: 1px solid rgba(77, 242, 255, 0.35);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .cta-text {
+      max-width: 420px;
+    }
+
+    .cta-title {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .cta-sub {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ---------- FOOTER ---------- */
+
+    footer {
+      border-top: 1px solid rgba(77, 242, 255, 0.18);
+      padding: 18px 0 26px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .footer-row span {
+      opacity: 0.8;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 16px;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+
+    /* ---------- SCROLL ANIMATIONS ---------- */
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .hero-visual {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .nav-links {
+        display: none;
+      }
+      .hero {
+        padding-top: 40px;
+      }
+      .cards {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .cta {
+        align-items: flex-start;
+      }
+    }
+  </style>
 </head>
 <body>
-    Hello maxcxam
+  <div class="noise"></div>
 
+  <header>
+    <div class="container nav">
+      <div class="logo">
+        <div class="logo-mark"></div>
+        <span>NEONCORE TECH</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#services">Сервіси</a>
+        <a href="#stack">Технології</a>
+        <a href="#cases">Кейси</a>
+      </nav>
+      <div class="nav-cta">
+        <button class="btn">
+          <span class="dot"></span>
+          <span>Live demo</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="container hero">
+      <div>
+        <div class="hero-kicker">FUTURISTIC IT CORE / 2040 READY</div>
+        <h1 class="hero-title">
+          Ми будуємо <span class="gradient">цифрові ядра</span> для
+          продуктів наступного десятиліття.
+        </h1>
+        <p class="hero-subtitle">
+          NEONCORE TECH — це команда, що поєднує інженерію, кібербезпеку та
+          3D‑інтерфейси, щоб створювати системи, які виглядають як з майбутнього,
+          але працюють у проді вже сьогодні.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary">
+            <span class="dot"></span>
+            <span>Запустити проєкт</span>
+          </button>
+          <button class="btn">
+            <span class="dot"></span>
+            <span>Отримати архітектурний аудит</span>
+          </button>
+        </div>
+        <div class="hero-meta">
+          <span>Zero‑trust архітектури</span>
+          <span>Cloud‑native платформи</span>
+          <span>3D‑інтерфейси для DevOps / SOC</span>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="orbital"></div>
+        <div class="card-3d" id="heroCard">
+          <div class="card-header">
+            <div class="chip">Realtime system telemetry</div>
+            <div class="status-pill">
+              <span class="dot"></span>
+              <span>Cluster: stable</span>
+            </div>
+          </div>
+          <div class="grid">
+            <div class="grid-left">
+              <div class="metric">
+                <div class="metric-label">Latency / global mesh</div>
+                <div class="metric-value">18.4 ms</div>
+                <div class="metric-sub">Across 42 edge locations</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Security posture</div>
+                <div class="metric-value">99.97%</div>
+                <div class="metric-sub">Zero‑trust, continuous verification</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">AI‑driven incidents</div>
+                <div class="metric-value">+312%</div>
+                <div class="metric-sub">Faster detection &amp; response</div>
+              </div>
+            </div>
+            <div class="grid-right">
+              <div class="tag-cloud">
+                <span class="tag">Kubernetes</span>
+                <span class="tag">Service Mesh</span>
+                <span class="tag">Zero‑Trust</span>
+                <span class="tag">Observability</span>
+                <span class="tag">SOC / SIEM</span>
+              </div>
+              <div class="radar">
+                <div class="radar-line"></div>
+                <div class="radar-dot"></div>
+                <div class="radar-dot"></div>
+                <div class="radar-dot"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services">
+      <div class="container">
+        <div class="section-label">Сервіси</div>
+        <div class="section-header">
+          <h2 class="section-title">Що ми будуємо для майбутнього.</h2>
+          <p class="section-subtitle">
+            Ми працюємо як архітектори цифрових ядер: від інфраструктури та
+            безпеки до інтерфейсів, які дозволяють керувати складними системами
+            так само інтуїтивно, як іграми.
+          </p>
+        </div>
+
+        <div class="cards">
+          <article class="card reveal">
+            <div class="card-kicker">01 / Core architecture</div>
+            <h3 class="card-title">Cloud‑native платформи</h3>
+            <p class="card-body">
+              Проєктуємо та впроваджуємо Kubernetes‑кластери, сервіс‑меші,
+              zero‑trust мережі та CI/CD‑пайплайни, які витримують реальний
+              продакшен‑навантаження.
+            </p>
+            <div class="card-meta">
+              <span>Multi‑region / self‑healing / GitOps</span>
+              <span class="pill">Platform engineering</span>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card-kicker">02 / Cyber defense</div>
+            <h3 class="card-title">Безпека як код</h3>
+            <p class="card-body">
+              Вбудовуємо безпеку в саму тканину інфраструктури: policy‑as‑code,
+              runtime‑моніторинг, повна трасованість подій та реакція в
+              реальному часі.
+            </p>
+            <div class="card-meta">
+              <span>SIEM / SOC / threat modeling</span>
+              <span class="pill">Zero‑trust</span>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card-kicker">03 / Interfaces</div>
+            <h3 class="card-title">3D‑панелі керування</h3>
+            <p class="card-body">
+              Створюємо футуристичні 3D‑інтерфейси для DevOps, SRE та
+              безпекових команд: живі карти інфраструктури, потоків трафіку та
+              інцидентів.
+            </p>
+            <div class="card-meta">
+              <span>WebGL / Three.js / R3F</span>
+              <span class="pill">Immersive UX</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- STACK -->
+    <section id="stack">
+      <div class="container">
+        <div class="section-label">Технологічний стек</div>
+        <div class="section-header">
+          <h2 class="section-title">Технології, на яких тримається ядро.</h2>
+          <p class="section-subtitle">
+            Ми не женемося за хайпом — ми обираємо стек, який витримає роки:
+            перевірені інструменти плюс обережно інтегрований cutting‑edge.
+          </p>
+        </div>
+
+        <div class="cards">
+          <article class="card reveal">
+            <div class="card-kicker">Infra</div>
+            <h3 class="card-title">Kubernetes / Service Mesh</h3>
+            <p class="card-body">
+              Istio, Linkerd, Cilium, eBPF‑спостереження, продумана мережна
+              сегментація та політики доступу.
+            </p>
+            <div class="card-meta">
+              <span>Resilience / traffic shaping</span>
+              <span class="pill">Mesh‑native</span>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card-kicker">Security</div>
+            <h3 class="card-title">Policy‑as‑code</h3>
+            <p class="card-body">
+              OPA, Kyverno, Sigstore, supply‑chain security, контроль артефактів
+              та підписів на кожному етапі.
+            </p>
+            <div class="card-meta">
+              <span>Shift‑left / runtime guardrails</span>
+              <span class="pill">Secure‑by‑design</span>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card-kicker">Experience</div>
+            <h3 class="card-title">Three.js / WebGL</h3>
+            <p class="card-body">
+              React‑Three‑Fiber, GLSL‑шейдери, volumetric‑ефекти, інтерактивні
+              сцени, що працюють у браузері без інсталяцій.
+            </p>
+            <div class="card-meta">
+              <span>Real‑time telemetry views</span>
+              <span class="pill">3D‑UX</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="cta reveal">
+          <div class="cta-text">
+            <div class="cta-title">Хочеш таке ядро для свого продукту?</div>
+            <div class="cta-sub">
+              Опиши свій стек, обмеження безпеки та бізнес‑вимоги — ми
+              спроєктуємо архітектуру, яка витримає наступні 5–7 років
+              розвитку.
+            </div>
+          </div>
+          <button class="btn btn-primary">
+            <span class="dot"></span>
+            <span>Запросити архітектурну сесію</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CASES -->
+    <section id="cases">
+      <div class="container">
+        <div class="section-label">Кейси</div>
+        <div class="section-header">
+          <h2 class="section-title">Системи, які вже працюють у проді.</h2>
+          <p class="section-subtitle">
+            Частину проєктів ми не можемо показати публічно, але ось кілька
+            узагальнених сценаріїв, які демонструють наш підхід.
+          </p>
+        </div>
+
+        <div class="cards">
+          <article class="card reveal">
+            <div class="card-kicker">Fintech / EU</div>
+            <h3 class="card-title">Zero‑trust платформа платежів</h3>
+            <p class="card-body">
+              Міграція моноліту на сервіс‑меш, повна трасованість транзакцій,
+              політики доступу на рівні сервісів, інтеграція з SOC.
+            </p>
+            <div class="card-meta">
+              <span>PCI‑DSS / 24/7</span>
+              <span class="pill">Latency &lt; 25 ms</span>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card-kicker">E‑commerce / Global</div>
+            <h3 class="card-title">Edge‑mesh для маркетплейсу</h3>
+            <p class="card-body">
+              Multi‑region Kubernetes, edge‑кешування, адаптивний роутинг трафіку,
+              3D‑панель для моніторингу навантаження в реальному часі.
+            </p>
+            <div class="card-meta">
+              <span>+38% performance</span>
+              <span class="pill">Global mesh</span>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card-kicker">Cyber / Internal</div>
+            <h3 class="card-title">3D‑SOC cockpit</h3>
+            <p class="card-body">
+              Інтерактивна 3D‑карта інцидентів, потоків трафіку та активів,
+              інтегрована з SIEM та alert‑системами.
+            </p>
+            <div class="card-meta">
+              <span>Faster MTTR</span>
+              <span class="pill">Immersive ops</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <span>© 2026 NEONCORE TECH. Умовний бренд для демо.</span>
+      <div class="footer-links">
+        <a href="#">Політика безпеки</a>
+        <a href="#">Контакти</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Простий 3D‑ефект для hero‑карти
+    const heroCard = document.getElementById("heroCard");
+    if (heroCard) {
+      heroCard.addEventListener("mousemove", (e) => {
+        const rect = heroCard.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        const rotateX = (y / rect.height) * -10;
+        const rotateY = (x / rect.width) * 16;
+        heroCard.style.transform =
+          "rotateY(" + rotateY + "deg) rotateX(" + rotateX + "deg)";
+      });
+
+      heroCard.addEventListener("mouseleave", () => {
+        heroCard.style.transform = "rotateY(-18deg) rotateX(10deg)";
+      });
+    }
+
+    // Reveal‑анімації при скролі
+    const reveals = document.querySelectorAll(".reveal");
+    const onScroll = () => {
+      const trigger = window.innerHeight * 0.85;
+      reveals.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < trigger) {
+          el.classList.add("visible");
+        }
+      });
+    };
+    document.addEventListener("scroll", onScroll);
+    window.addEventListener("load", onScroll);
+  </script>
 </body>
 </html>
